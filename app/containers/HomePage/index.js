@@ -27,12 +27,13 @@ import { loadRepos } from '../App/actions';
 
 import { FormattedMessage } from 'react-intl';
 import RepoListItem from 'containers/RepoListItem';
-import Button from 'components/Button';
+import { Button } from 'react-toolbox/lib/button';
 import H2 from 'components/H2';
 import List from 'components/List';
 import ListItem from 'components/ListItem';
 import LoadingIndicator from 'components/LoadingIndicator';
 
+import 'react-toolbox/lib/commons.css';
 import styles from './styles.css';
 
 export class HomePage extends React.Component {
@@ -118,7 +119,7 @@ export class HomePage extends React.Component {
             </form>
             {mainContent}
           </section>
-          <Button handleRoute={this.openFeaturesPage}>
+          <Button raised accent>
             <FormattedMessage {...messages.featuresButton} />
           </Button>
         </div>

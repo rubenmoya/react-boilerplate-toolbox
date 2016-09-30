@@ -9,6 +9,9 @@ const webpack = require('webpack');
 const cssnext = require('postcss-cssnext');
 const postcssFocus = require('postcss-focus');
 const postcssReporter = require('postcss-reporter');
+const postcssImport = require('postcss-import');
+const postcssMixins = require('postcss-mixins');
+const postcssEach = require('postcss-each');
 
 module.exports = (options) => ({
   entry: options.entry,
@@ -25,18 +28,9 @@ module.exports = (options) => ({
     }, {
       // Transform our own .css files with PostCSS and CSS-modules
       test: /\.css$/,
-      exclude: /node_modules/,
       loader: options.cssLoaders,
-    }, {
-      // Do not transform vendor's CSS with CSS-modules
-      // The point is that they remain in global scope.
-      // Since we require these CSS files in our JS or CSS files,
-      // they will be a part of our compilation either way.
-      // So, no need for ExtractTextPlugin here.
-      test: /\.css$/,
-      include: /node_modules/,
-      loaders: ['style-loader', 'css-loader'],
-    }, {
+    },
+    {
       test: /\.(eot|svg|ttf|woff|woff2)$/,
       loader: 'file-loader',
     }, {
@@ -71,7 +65,12 @@ module.exports = (options) => ({
       },
     }),
   ]),
-  postcss: () => [
+  postcss: (webpackInstance) => [
+    postcssImport({
+      addDependencyTo: webpackInstance,
+    }),
+    postcssMixins(),
+    postcssEach(),
     postcssFocus(), // Add a :focus to every :hover
     cssnext({ // Allow future CSS features to be used, also auto-prefixes the CSS...
       browsers: ['last 2 versions', 'IE > 10'], // ...based on this browser list
